@@ -1,0 +1,4 @@
+#### Covers
+
+- typescript
+- react-redux
