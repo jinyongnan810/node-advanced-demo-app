@@ -158,4 +158,35 @@ describe("delete post", () => {
     const posts = await Post.find({ title });
     expect(posts.length).toEqual(1);
   });
+  it("user not authorized", async () => {
+    // signup
+    const email = "test@test.com";
+    const cookie = await global.signup(email);
+    const users = await User.find({ email });
+    expect(users.length).toEqual(1);
+    const user = users[0];
+    // create post
+    const title = "testTitle";
+    const content = "testContent";
+    const titleChanged = "testTitleChanged";
+    const contentChanged = "testContentChanged";
+    const resTemp = await request(app)
+      .post("/api/posts")
+      .set("Cookie", cookie)
+      .send({
+        title,
+        content,
+      })
+      .expect(201);
+    const res = await request(app)
+      .delete(`/api/posts/${resTemp.body.id}`)
+      .send({})
+      .expect(401);
+    // check response
+    expect(res.body.errors.length).toEqual(1);
+    expect(res.body.errors[0].message).toEqual("Not authorized.");
+    // check db
+    const posts = await Post.find({ title });
+    expect(posts.length).toEqual(1);
+  });
 });

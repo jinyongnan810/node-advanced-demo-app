@@ -39,6 +39,13 @@ const Header = () => {
             )}
             {!auth.loading && auth.isAuthenticated && (
               <li className="nav-item">
+                <Link to="/post/list" className="nav-link">
+                  Posts
+                </Link>
+              </li>
+            )}
+            {!auth.loading && auth.isAuthenticated && (
+              <li className="nav-item">
                 <Link to="/" className="nav-link" onClick={onLogout}>
                   Sign Out
                 </Link>

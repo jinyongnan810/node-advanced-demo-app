@@ -10,9 +10,9 @@ export const AUTH_EXPIRED = "AUTH_EXPIRED";
 export const SHOW_MESSAGES = "SHOW_MESSAGES";
 export const CLEAR_MESSAGES = "CLEAR_MESSAGES";
 // meeting
-export const UPDATE_USERS = "UPDATE_USERS";
-export const ADD_AUDIO = "ADD_AUDIO";
-export const REMOVE_AUDIO = "REMOVE_AUDIO";
-export const CLEAR_AUDIO = "CLEAR_AUDIO";
-export const AUDIO_OUTPUT_DEVICE = "AUDIO_OUTPUT_DEVICE";
-export const AUDIO_INPUT_DEVICE = "AUDIO_INPUT_DEVICE";
+export const POST_LIST = "POST_LIST";
+export const SHOW_POST = "SHOW_POST";
+export const ADD_POST = "ADD_POST";
+export const DELETE_POST = "DELETE_POST";
+export const LOAD_POST = "LOAD_POST";
+export const LOAD_POST_FAIL = "LOAD_POST_FAIL";

@@ -31,8 +31,8 @@ app.set("trust proxy", true); //trust ingress nginx
 app.use(
   cookieSesion({
     signed: false,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : undefined,
+    secure: false, //process.env.NODE_ENV === "production",
+    // sameSite: "none", //process.env.NODE_ENV === "production" ? "none" : undefined,
   })
 );
 app.use(json());

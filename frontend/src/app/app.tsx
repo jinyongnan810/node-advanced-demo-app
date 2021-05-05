@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { createHashHistory } from "history";
 
-import { ipcRenderer } from "electron";
 import axios from "axios";
 import Dashboard from "./components/Dashboard";
 import Header from "./components/Header";
@@ -15,6 +14,8 @@ import "../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
 import { loadUser } from "./actions/auth";
 import { PrivateRoute } from "./routes/PrivateRoute";
 import { PublicRoute } from "./routes/PublicRoute";
+import CreatePost from "./components/post/CreatePost";
+import ListPost from "./components/post/ListPost";
 
 const app = () => {
   axios.defaults.baseURL = process.env.SERVER_URL;
@@ -31,6 +32,8 @@ const app = () => {
           <Switch>
             <PublicRoute path="/signup" component={Signup} />
             <PublicRoute path="/login" component={Login} />
+            <PrivateRoute path="/post/list" component={ListPost} />
+            <PrivateRoute path="/post/create" component={CreatePost} />
             <PrivateRoute path="/" component={Dashboard} />
           </Switch>
         </div>

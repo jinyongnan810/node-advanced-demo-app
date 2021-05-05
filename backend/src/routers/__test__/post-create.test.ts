@@ -95,4 +95,47 @@ describe("create post", () => {
     const posts = await Post.find({ title });
     expect(posts.length).toEqual(0);
   });
+  it("no title and no content", async () => {
+    // signup
+    const email = "test@test.com";
+    const cookie = await global.signup(email);
+    const users = await User.find({ email });
+    expect(users.length).toEqual(1);
+    const user = users[0];
+    // create post
+    const title = "testTitle";
+    const content = "testContent";
+    const res = await request(app)
+      .post("/api/posts")
+      .set("Cookie", cookie)
+      .send({})
+      .expect(400);
+    // check response
+    expect(res.body.errors.length).toEqual(2);
+    expect(res.body.errors[0].field).toEqual("title");
+    expect(res.body.errors[0].message).toEqual("Title must be provided.");
+    expect(res.body.errors[1].field).toEqual("content");
+    expect(res.body.errors[1].message).toEqual("Content must be provided.");
+    // check db
+    const posts = await Post.find({ title });
+    expect(posts.length).toEqual(0);
+  });
+  it("not authorized", async () => {
+    // create post
+    const title = "testTitle";
+    const content = "testContent";
+    const res = await request(app)
+      .post("/api/posts")
+      .send({
+        title,
+        content,
+      })
+      .expect(401);
+    // check response
+    expect(res.body.errors.length).toEqual(1);
+    expect(res.body.errors[0].message).toEqual("Not authorized.");
+    // check db
+    const posts = await Post.find({ title });
+    expect(posts.length).toEqual(0);
+  });
 });
