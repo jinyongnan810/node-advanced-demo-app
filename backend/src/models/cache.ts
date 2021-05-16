@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
 import { redisClient } from "../redis/redis-client";
 const exec = mongoose.Query.prototype.exec;
+(mongoose.Query.prototype as any).cache = function () {
+  (this as any).useCache = true;
+  return this;
+};
 mongoose.Query.prototype.exec = async function () {
+  if (!(this as any).useCache) {
+    return exec.apply(this);
+  }
   //   console.log("-----------------------------------------------");
   const query = this.getQuery();
   const collectionName = (this as any).mongooseCollection.name;
@@ -11,7 +18,7 @@ mongoose.Query.prototype.exec = async function () {
   //   console.log(key);
   const exist = await redisClient.get(key);
   if (exist !== null) {
-    // console.log(`get from cache:${key},data:${exist}`);
+    console.log(`get from cache:${key},data:${exist}`);
     const parsed = JSON.parse(exist);
     let ret;
     if (Array.isArray(parsed)) {

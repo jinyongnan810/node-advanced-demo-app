@@ -14,7 +14,9 @@ router.get(
     if (!user) {
       throw new UnAuthorizedError();
     }
-    const posts = await Post.find({ user: user._id ?? user.id });
+
+    // @ts-ignore
+    const posts = await Post.find({ user: user._id ?? user.id }).cache();
     res.send(posts);
   }
 );
