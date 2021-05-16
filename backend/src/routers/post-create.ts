@@ -23,7 +23,7 @@ router.post(
     if (!user) {
       throw new UnAuthorizedError();
     }
-    const post = Post.build({ title, content, user: user });
+    const post = Post.build({ title, content, user: user._id ?? user.id });
     await post.save();
     res.status(201).send(post);
   }
