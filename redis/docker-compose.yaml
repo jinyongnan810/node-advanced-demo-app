@@ -4,6 +4,6 @@ services:
     container_name: redis
     image: redis
     restart: always
-    command: redis-server --requirepass ntt-secret
+    command: redis-server
     ports:
       - "6379:6379"

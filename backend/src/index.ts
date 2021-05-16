@@ -6,6 +6,7 @@ const mongod = new MongoMemoryServer();
 import dotenv from "dotenv";
 dotenv.config();
 import { app } from "./app";
+import "./models/cache";
 
 console.log("Backend starting...");
 if (!process.env.JWT_KEY) {

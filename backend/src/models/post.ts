@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+// import { redisClient } from "../redis/redis-client";
 import { UserDoc } from "./user";
 interface PostAttrs {
   title: string;
@@ -43,7 +44,12 @@ const postSchema = new mongoose.Schema(
   }
 );
 
-postSchema.pre("save", async function (done) {});
+// postSchema.pre("find", async function (done) {
+//   const exists  = await redisClient.get(JSON.stringify(this.getOptions()))
+//   if(exists){
+//     this.set
+//   }
+// });
 
 postSchema.statics.build = (attrs: PostAttrs) => {
   return new Post(attrs);
