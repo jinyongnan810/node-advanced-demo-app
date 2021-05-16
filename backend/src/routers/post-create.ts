@@ -4,6 +4,7 @@ import { UnAuthorizedError } from "../errors/unauthorized-error";
 import { currentUser } from "../middlewares/current-user";
 import { requireAuth } from "../middlewares/require-auth";
 import { validateRequest } from "../middlewares/validate-request";
+import { clearCache } from "../models/cache";
 import { Post } from "../models/post";
 import { User } from "../models/user";
 const router = express.Router();
@@ -25,6 +26,7 @@ router.post(
     }
     const post = Post.build({ title, content, user: user._id ?? user.id });
     await post.save();
+    clearCache(req.currentUser!.id);
     res.status(201).send(post);
   }
 );

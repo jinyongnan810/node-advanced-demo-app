@@ -1,8 +1,11 @@
 import mongoose from "mongoose";
 import { redisClient } from "../redis/redis-client";
 const exec = mongoose.Query.prototype.exec;
-(mongoose.Query.prototype as any).cache = function () {
+(mongoose.Query.prototype as any).cache = function (
+  { key }: { key: string } = { key: "default" }
+) {
   (this as any).useCache = true;
+  (this as any).hashKey = key;
   return this;
 };
 mongoose.Query.prototype.exec = async function () {
@@ -15,8 +18,9 @@ mongoose.Query.prototype.exec = async function () {
   const key = JSON.stringify(
     Object.assign({}, query, { collection: collectionName })
   );
+  const hashKey = (this as any).hashKey;
   //   console.log(key);
-  const exist = await redisClient.get(key);
+  const exist = await redisClient.hget(hashKey, key);
   if (exist !== null) {
     console.log(`get from cache:${key},data:${exist}`);
     const parsed = JSON.parse(exist);
@@ -35,6 +39,11 @@ mongoose.Query.prototype.exec = async function () {
 
   const newFetched = await exec.apply(this);
   //   console.log(`newFetched:${JSON.stringify(newFetched)}`);
-  await redisClient.set(key, JSON.stringify(newFetched), "EX", 3);
+
+  await redisClient.hset(hashKey, key, JSON.stringify(newFetched)); //, "EX", 3);// redis ttl not appliable for hset
   return newFetched;
 };
+const clearCache = (hashKey: string = "default") => {
+  redisClient.del(hashKey);
+};
+export { clearCache };
