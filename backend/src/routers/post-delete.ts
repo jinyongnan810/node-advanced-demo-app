@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import { BadRequestError } from "../errors/bad-request-error";
 import { UnAuthorizedError } from "../errors/unauthorized-error";
+import { clearCacheMiddleware } from "../middlewares/clear-cache";
 import { currentUser } from "../middlewares/current-user";
 import { requireAuth } from "../middlewares/require-auth";
 import { Post } from "../models/post";
@@ -11,6 +12,7 @@ router.delete(
   "/api/posts/:id",
   currentUser,
   requireAuth,
+  clearCacheMiddleware,
   async (req: Request, res: Response) => {
     const { title, content } = req.body;
     const id = req.params["id"];

@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import { UnAuthorizedError } from "../errors/unauthorized-error";
+import { clearCacheMiddleware } from "../middlewares/clear-cache";
 import { currentUser } from "../middlewares/current-user";
 import { requireAuth } from "../middlewares/require-auth";
 import { validateRequest } from "../middlewares/validate-request";
@@ -18,6 +19,7 @@ router.post(
     body("content").notEmpty().withMessage("Content must be provided."),
   ],
   validateRequest,
+  clearCacheMiddleware,
   async (req: Request, res: Response) => {
     const { title, content } = req.body;
     const user = await User.findById(req.currentUser!.id);
@@ -26,7 +28,6 @@ router.post(
     }
     const post = Post.build({ title, content, user: user._id ?? user.id });
     await post.save();
-    clearCache(req.currentUser!.id);
     res.status(201).send(post);
   }
 );
