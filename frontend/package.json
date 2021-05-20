@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --config webpack.react.js --mode development",
     "build": "cross-env NODE_ENV=production webpack --config webpack.react.js  --mode production",
-    "test": "jest --coverage"
+    "test": "jest"
   },
   "jest": {
     "preset": "ts-jest",
