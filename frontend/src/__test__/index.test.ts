@@ -73,14 +73,24 @@ describe("after log in", () => {
     await browser!.close();
   });
   it("page content after login", async () => {
-    await wait(1);
+    // wait for ui change
+
+    // use waitForFunction
+    // await page.waitForFunction(
+    //   () => !!document.querySelector('a.nav-link[href="#/post/list"]')
+    // );
+    // use waitForSelector
+    await page.waitForSelector('a.nav-link[href="#/post/list"]', {
+      timeout: 1000,
+    });
+
+    // await wait(1);
     const navs = await page.evaluate(() =>
       Array.from(
         document.getElementsByClassName("nav-link"),
         (el) => el.textContent
       )
     );
-    // wait for ui change
 
     expect(navs.length).toEqual(3);
     expect(navs[0]).toEqual("my-test@test.com's Dashboard");
