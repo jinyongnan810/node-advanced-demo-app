@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import CustomPage from "./helper/page";
 dotenv.config();
 
 const wait = async (sec: number) => {
@@ -85,6 +86,31 @@ describe("after log in", () => {
     });
 
     // await wait(1);
+    const navs = await page.evaluate(() =>
+      Array.from(
+        document.getElementsByClassName("nav-link"),
+        (el) => el.textContent
+      )
+    );
+
+    expect(navs.length).toEqual(3);
+    expect(navs[0]).toEqual("my-test@test.com's Dashboard");
+    expect(navs[1]).toEqual("Posts");
+    expect(navs[2]).toEqual("Sign Out");
+  });
+});
+
+describe("after log in(using proxy)", () => {
+  let page: CustomPage & puppeteer.Page & puppeteer.Browser;
+  beforeEach(async () => {
+    page = await CustomPage.build();
+    await page.login();
+    // await page.reload();
+  });
+  afterEach(async () => {
+    await page.close();
+  });
+  it("page content after login", async () => {
     const navs = await page.evaluate(() =>
       Array.from(
         document.getElementsByClassName("nav-link"),
