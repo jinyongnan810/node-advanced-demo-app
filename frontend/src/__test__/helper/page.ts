@@ -8,6 +8,11 @@ class CustomPage {
   > {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+    await page.setViewport({
+      width: 1280,
+      height: 2000, // sometimes when content are too long, page.click will not work because it can't see the element
+      deviceScaleFactor: 1,
+    });
     await page.goto("http://localhost:4000");
     const customPage = new CustomPage(page);
     const hasKey = <T extends object>(obj: T, k: keyof any): k is keyof T =>
@@ -52,7 +57,7 @@ class CustomPage {
     await this.page.waitForSelector('a.nav-link[href="#/post/list"]', {
       timeout: 1000,
     });
-
+    console.log("page logged in.");
     // await wait(1);
   }
 }

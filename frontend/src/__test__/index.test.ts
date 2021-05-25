@@ -117,10 +117,51 @@ describe("after log in(using proxy)", () => {
         (el) => el.textContent
       )
     );
+    const content = await page.evaluate(() => {
+      return document.querySelector("h1")?.innerHTML;
+    });
 
     expect(navs.length).toEqual(3);
     expect(navs[0]).toEqual("my-test@test.com's Dashboard");
     expect(navs[1]).toEqual("Posts");
     expect(navs[2]).toEqual("Sign Out");
+    expect(content).toEqual("Dashboard");
+  });
+
+  it("post add test", async () => {
+    console.log("click header posts tab");
+    await page.click('.nav-link[href="#/post/list"]');
+    await page.waitForSelector(".list-group");
+    expect(page.url()).toEqual("http://localhost:4000/#/post/list");
+    console.log("click add post button");
+    await page.click('.btn[href="#/post/create"]');
+    await page.waitForSelector("form");
+    expect(page.url()).toEqual("http://localhost:4000/#/post/create");
+    console.log("set post content");
+    const titleValue = `title${Math.random() * 1000000}`;
+    const contentValue = `content${Math.random() * 1000000}`;
+    await page.type("#title", titleValue);
+    await page.type("#content", contentValue);
+    console.log("click submit");
+    await page.click('button[type="submit"]');
+    await page.waitForSelector(".list-group-item");
+    expect(page.url()).toEqual("http://localhost:4000/#/post/list");
+    console.log("check post added");
+    const posts = await page.evaluate(() => {
+      return Array.from(
+        document.getElementsByClassName("list-group-item"),
+        (el) => {
+          return {
+            title: el.getElementsByClassName("fw-bold")[0]?.innerHTML,
+            //@ts-ignore
+            content: el.getElementsByClassName("ms-2")[0]?.innerText,
+          };
+        }
+      );
+    });
+    console.log(posts);
+
+    expect(posts.length).toBeGreaterThanOrEqual(1);
+    expect(posts.find((p) => p.title === titleValue)).toBeTruthy();
   });
 });
