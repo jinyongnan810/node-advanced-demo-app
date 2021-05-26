@@ -16,9 +16,10 @@ router.get(
     }
 
     // @ts-ignore
-    const posts = await Post.find({ user: user._id ?? user.id }).cache({
-      key: req.currentUser!.id,
-    });
+    const posts = await Post.find({ user: user._id ?? user.id });
+    // .cache({
+    //   key: req.currentUser!.id,
+    // });
     res.send(posts);
   }
 );

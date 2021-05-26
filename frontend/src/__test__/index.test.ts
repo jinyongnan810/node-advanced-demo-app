@@ -33,6 +33,8 @@ describe("before log in", () => {
     await browser!.close();
   });
   it("default page content before login", async () => {
+    await page.waitForTimeout(1000);
+    expect(page.url()).toEqual("http://localhost:4000/#/login");
     const navs = await page.evaluate(() =>
       Array.from(
         document.getElementsByClassName("nav-link"),
@@ -81,9 +83,7 @@ describe("after log in", () => {
     //   () => !!document.querySelector('a.nav-link[href="#/post/list"]')
     // );
     // use waitForSelector
-    await page.waitForSelector('a.nav-link[href="#/post/list"]', {
-      timeout: 1000,
-    });
+    await page.waitForSelector('a.nav-link[href="#/post/list"]');
 
     // await wait(1);
     const navs = await page.evaluate(() =>

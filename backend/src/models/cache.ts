@@ -20,7 +20,12 @@ mongoose.Query.prototype.exec = async function () {
   );
   const hashKey = (this as any).hashKey;
   //   console.log(key);
-  const exist = await redisClient.hget(hashKey, key);
+  let exist = null;
+  try {
+    exist = await redisClient.hget(hashKey, key);
+  } catch (error) {
+    console.log("no redis available");
+  }
   if (exist !== null) {
     console.log(`get from cache:${key},data:${exist}`);
     const parsed = JSON.parse(exist);
@@ -39,8 +44,9 @@ mongoose.Query.prototype.exec = async function () {
 
   const newFetched = await exec.apply(this);
   //   console.log(`newFetched:${JSON.stringify(newFetched)}`);
-
-  await redisClient.hset(hashKey, key, JSON.stringify(newFetched)); //, "EX", 3);// redis ttl not appliable for hset
+  try {
+    await redisClient.hset(hashKey, key, JSON.stringify(newFetched)); //, "EX", 3);// redis ttl not appliable for hset
+  } catch (error) {}
   return newFetched;
 };
 const clearCache = (hashKey: string = "default") => {

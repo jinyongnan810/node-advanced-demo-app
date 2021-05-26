@@ -6,7 +6,7 @@ class CustomPage {
   static async build(): Promise<
     CustomPage & puppeteer.Page & puppeteer.Browser
   > {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.setViewport({
       width: 1280,
