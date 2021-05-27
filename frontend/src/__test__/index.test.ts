@@ -52,6 +52,14 @@ describe("before log in", () => {
     expect(navs[1]).toEqual("Log In");
     expect(cardTitle).toEqual("Log In");
   });
+  it("user cannot make ajax request to server before log in", async () => {
+    const res = await page.evaluate(() => {
+      return fetch("http://localhost:5000/api/posts", {
+        method: "GET",
+      }).then((res) => res.json());
+    });
+    expect(res).toEqual({ errors: [{ message: "Not authorized." }] });
+  });
 });
 
 describe("after log in", () => {
