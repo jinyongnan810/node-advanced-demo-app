@@ -15,7 +15,7 @@ module.exports = () => {
       return prev;
     }, envKeys);
   } else {
-    const keys = ["SERVER_URL", "WEBSOCKET_URL", "SKYWAY_KEY"];
+    const keys = ["SERVER_URL"];
     keys.forEach((k) => {
       envKeys[`process.env.${k}`] = JSON.stringify(process.env[k]);
     });
