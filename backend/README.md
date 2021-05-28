@@ -2,6 +2,7 @@
 
 - typescript
 - express
+- authentication with jwt and cookie
 
 #### when something go wrong
 
